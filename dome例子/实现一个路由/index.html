@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+
+    <a href="page1" mode="spa">page1</a>
+    <a href="page2" mode="spa">page2</a>
+    <a href="page3" mode="spa">page3</a>
+    <a href="page4" mode="spa">pag5</a>
+
+    <div id="root"></div>
+    <script src="./history.js"></script>
+    <script type="text/javascript">
+        let router = new HistoryRouter() 
+        let root = document.getElementById("root")
+        router.register("/",()=>root.innerHTML = "page1")
+        router.register("page1",()=>root.innerHTML = "page1")
+        router.register("page2",()=>root.innerHTML = "page2")
+        router.register("page3",()=>root.innerHTML = "page3")
+        router.register("page4",()=>{
+            throw new Error('抛出一个异常')
+        })
+
+        router.redirect(() => root.innerHTML = '页面不存在：<br>');
+        router.registerError((e) => root.innerHTML = '页面异常，错误消息：<br>' + e.message);
+        router.init()
+    </script>
+</body>
+</html>

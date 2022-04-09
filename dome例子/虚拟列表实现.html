@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .contains{
+            height: 600px;
+            width: 800px;
+            margin: auto;
+            overflow-y: scroll;
+            position: relative;
+        }
+        .scroll-phantom{
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+        }
+        .scroll-views{
+            top: 0;
+            left: 0;
+            right:0;
+            position: absolute;
+        }
+        .itme{
+            height: 60px;
+        }
+
+    </style>
+</head>
+<body>
+        <div class="contains">
+            <div class="scroll-phantom"></div>
+            <div class="scroll-views"></div>
+        </div>
+</body>
+
+<script>
+    let contains =document.querySelector(".contains")
+    let scrollViews = document.querySelector(".scroll-views")
+    let scrollPhantom = document.querySelector(".scroll-phantom")
+    let allData = Array.from({length:1000},(_,v)=>v)
+    scrollPhantom.style.height = (allData.length * 60 ) +'px'
+
+    function debounces(fn,delay=500){
+        let timer = null;
+
+        return function(){
+            let args = arguments;
+            let _this = this
+            if(timer){
+                clearTimeout(timer)
+            }
+            timer= setTimeout(function(){
+                fn.apply(_this,args)
+            },delay)
+        }
+
+    }
+
+
+    function render(data){
+        let renderStr = '';
+        for (let index = 0; index < data.length; index++) {
+ 
+            renderStr+=`<div class="itme itme-${data[index]}">itme-${data[index]}</div>`
+        }
+        scrollViews.innerHTML = renderStr;
+
+    }
+    window.addEventListener("load",function(){
+        let itmeHeight = 60;//先写死 itme 高度
+        // contains.addEventListener("scroll",function(){
+        //     updateViews(this)
+        // })
+        
+        contains.addEventListener("scroll",debounces(function(e){
+            // console.log(this)
+            updateViews(this)
+        },10))
+      
+        updateViews(contains)
+        function updateViews(ev){
+          
+            requestAnimationFrame(()=>{
+                let scrollTop = ev.scrollTop ||0;
+                // 计算当前可以显示的个数
+                let viewsCount = Math.ceil(ev.clientHeight /itmeHeight)   ; 
+                
+                // 计算当前可视区域显示的起始 数据的搜索(相对总数的索引)
+                let startIndex = Math.floor(scrollTop/itmeHeight)
+
+                //计算当前可视区域显示的结束索引endIndex(相对总数的索引)
+                let endIndex = startIndex + viewsCount
+
+                console.log(scrollTop,viewsCount,startIndex,endIndex)
+                let renderData = allData.slice(startIndex,endIndex)
+                console.log(renderData)
+                render(renderData)
+                console.log(scrollTop,startIndex * itmeHeight,startIndex)
+                scrollViews.style.transform = `translate3d(0, ${scrollTop}px, 0px)`
+            })
+        }
+
+        
+    })
+</script>
+</html>

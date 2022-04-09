@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        .by-pop-root .by-pop-mask,
+        .by-pop-root .by-pop-warp {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            height: 100%;
+        }
+
+        .by-pop-root .by-pop-mask {
+            background-color: rgba(0, 0, 0, .45);
+        }
+
+        .by-pop-root .by-pop-warp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .by-pop-root .by-pop-main {
+            width: 900px;
+            max-width: calc(100vw - 32px);
+        }
+
+        .by-pop-root .by-pop-content {
+            position: relative;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 0;
+            border-radius: 2px;
+        }
+
+        .by-pop-root .by-pop-colse {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 10;
+            cursor: pointer;
+            transition: color .3s;
+            display: block;
+            width: 56px;
+            height: 56px;
+            font-size: 16px;
+            line-height: 56px;
+            text-align: center;
+            color: #999;
+        }
+
+        .by-pop-root .by-pop-header {
+            padding: 16px 24px;
+            color: rgba(0, 0, 0, .85);
+            background: #fff;
+            border-bottom: 1px solid #f0f0f0;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .by-pop-root .by-pop-body {
+            padding: 24px;
+            font-size: 14px;
+            max-height: calc(100vh - 180px);
+            overflow-y: auto;
+        }
+
+        .by-pop-root .by-pop-footer {
+            padding: 10px 16px;
+            text-align: right;
+            background: transparent;
+            border-top: 1px solid #f0f0f0;
+            border-radius: 0 0 2px 2px
+        }
+
+        .by-pop-root .by-pop-footer>* {
+            margin-left: 12px;
+        }
+
+        .by-pop-root .by-pop-footer .by-pop-btn {
+            height: 32px;
+            padding: 4px 15px;
+            font-size: 14px;
+            border-radius: 2px;
+            color: rgba(0, 0, 0, .85);
+            background: #fff;
+            border: 1px solid #d9d9d9;
+            display: inline-block;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .by-pop-root .by-pop-footer .by-pop-btn:hover {
+            border: 1px solid #1890ff;
+            color: #1890ff;
+        }
+
+        .by-pop-root .by-pop-footer .by-pop-btn.by-blue-btn {
+            color: #fff;
+            background: #1890ff;
+            border-color: #1890ff;
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, .12);
+        }
+
+        .by-pop-root .by-pop-footer .by-pop-btn.by-blue-btn:hover {
+            background: #63aaec;
+            border-color: #63aaec;
+        }
+
+        .by-pop-active .by-pop-mask,
+        .by-pop-active .by-pop-warp {
+            transform: scale(1);
+            opacity: 1;
+            transition: all 0.2s linear;
+        }
+
+        .by-pop-hidden .by-pop-mask,
+        .by-pop-hidden .by-pop-warp {
+            transform: scale(0);
+            opacity: 0;
+            transition: all 0.2s linear;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button onclick="show('#modal-1')">显示</button>
+    <div class="by-pop-root by-pop-hidden" id="modal-1">
+        <div class="by-pop-mask"></div>
+        <div class="by-pop-warp">
+            <div class="by-pop-main">
+                <div class="by-pop-content">
+                    <span class="by-pop-colse">关闭</span>
+                    <div class="by-pop-header">标题</div>
+                    <div class="by-pop-body">
+                        12155<br> 12199<br> 121<br>121<br>121<br>121<br>121<br> 121<br> 121<br> 121<br>
+                        12155<br> 12199<br> 121<br>121<br>121<br>121<br>121<br> 121<br> 121<br> 121<br>
+                        12155<br> 12199<br> 121<br>121<br>121<br>121<br>121<br> 121<br> 121<br> 121<br>
+                        12155<br> 12199<br> 121<br>121<br>121<br>121<br>121<br> 121<br> 121<br> 121<br>
+                        12155<br> 12199<br> 121<br>121<br>121<br>121<br>121<br> 121<br> 121<br> 121<br>
+                        12155<br> 12199<br> 121<br>121<br>121<br>121<br>121<br> 121<br> 121<br> 121<br>
+                        12155<br> 12199<br> 121<br>121<br>121<br>121<br>121<br> 121<br> 121<br> 121<br>
+                    </div>
+                    <div class="by-pop-footer">
+                        <button type="button" class="by-pop-btn">取消</button>
+
+                        <button type="button" class="by-pop-btn by-blue-btn">确定</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function closePop(e) {
+        // console.log(this)
+    }
+    function show(el) {
+        let popDom = document.querySelector(el)
+        popDom.classList.remove("by-pop-hidden")
+        popDom.classList.add("by-pop-active")
+    }
+    onEven("click", ".by-pop-root", '.by-pop-colse,.by-pop-btn', function (e) {
+        if (this.mapTarget) {
+            this.mapTarget.classList.remove("by-pop-active")
+            this.mapTarget.classList.add("by-pop-hidden")
+        }
+    })
+    function onEven(eventType, parntNode, childNode, fn, bool) {
+        //没有委托
+        let trifn;
+        if (typeof childNode == 'function') {
+            bool = fn;
+            trifn = childNode
+        } else {
+            //有委托
+            trifn = function (e) {
+                let target = e.target
+                if (target.matches(childNode)) {
+                    target['mapTarget'] = this;
+                    typeof fn == "function" && fn.apply(target, arguments)
+                }
+            }
+        }
+        document.querySelectorAll(parntNode).forEach(function (itme) {
+            itme.addEventListener(eventType, trifn, bool || false)
+        })
+    }
+</script>
+
+</html>
