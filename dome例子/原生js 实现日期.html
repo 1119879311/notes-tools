@@ -39,6 +39,7 @@
             line-height: 30px;
             margin: 5px auto;
             display: none;
+            position: absolute;
         }
 
         .by-dateTime-hader {
@@ -155,8 +156,10 @@
 
 <body>
     <!-- <div style="height: 1200px;"></div> -->
-    <div class="by-datetime-picter" style="position: absolute;right: 0;bottom: 0"></div>
     <div class="by-datetime-picter2"></div>
+    <div style="height: 1200px;"></div>
+    <div class="by-datetime-picter" style="position: relative;right: 0;"></div>
+
     <script>
         let refIndex = 1;
         function byDateTimePicter(option = {}) {
@@ -311,16 +314,21 @@
                 let targetPos = _this.dateTimeRef.getBoundingClientRect();
                 // debugger
 
-                let isOutLeft = clickTargetPos.left + targetPos.width > window.innerWidth;
-                let lastLeft = isOutLeft ? window.innerWidth - targetPos.width : clickTargetPos.left;
+                // let isOutLeft = clickTargetPos.left + targetPos.width > window.innerWidth;
+                let bodyW = document.body.scrollWidth
+                let isOutLeft = e.pageX + targetPos.width > bodyW
 
-                let isBottom = clickTargetPos.bottom + targetPos.height > window.innerHeight;
-                let lastTop = isBottom ? clickTargetPos.top - targetPos.height - 12 : clickTargetPos.bottom
+                let lastLeft = isOutLeft ? bodyW - targetPos.width : e.pageX - e.offsetX;
+
+                let bodyH = document.body.scrollHeight >= window.innerHeight ? document.body.scrollHeight : window.innerHeight;;
+                // let isBottom = clickTargetPos.bottom + targetPos.height > window.innerHeight;
+                let isBottom = e.pageY + targetPos.height - e.offsetY > bodyH
+                let lastTop = isBottom ? e.pageY - targetPos.height - 12 : e.pageY + e.target.offsetHeight;
 
 
                 // let top = e.pageY - e.offsetY + e.target.offsetHeight;
-                _this.dateTimeRef.style.cssText = `position:fixed;left:${lastLeft}px;top:${lastTop}px;display:block`
-
+                _this.dateTimeRef.style.cssText = `position:absolute;left:${lastLeft}px;top:${lastTop - e.offsetY}px;display:block`
+                console.log("---", e, e.pageY + targetPos.height, clickTargetPos, targetPos)
                 e.stopPropagation()
                 return false
             })

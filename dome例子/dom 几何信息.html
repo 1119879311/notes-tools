@@ -1,63 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        *{margin: 0;padding: 0;}
-        .box{
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
             /* box-sizing: border-box;  */
             width: 100px;
             height: 100px;
-            border:10px solid red;
+            border: 10px solid red;
             padding: 10px;
             margin: 10px;
             overflow: auto;
         }
+
         /* ie 模型 */
-        .box1{
+        .box1 {
             /* border: 0; */
-            box-sizing: border-box; 
+            box-sizing: border-box;
             position: absolute;
             left: 200px;
             top: 200px;
         }
     </style>
 </head>
+
 <body>
-    
+
     <div style="padding: 10px;position: relative;margin: 10px;border: 1px solid #000;">
         <div class="box" id="box"></div>
     </div>
     <div class="box box1" id="box1">
-       <div>
-        lal<br/>lal<br/>lal<br/>lal<br/>lal<br/>
-        lal<br/>lal<br/>lal<br/>lal<br/>lal<br/>
-        lal<br/>lal<br/>lal<br/>lal<br/>lal<br/>
-        lal<br/>lal<br/>lal<br/>lal<br/>
-        lal<br/>lal<br/>lal<br/>lal<br/>lal<br/>
-       </div>
+        <div>
+            lal<br />lal<br />lal<br />lal<br />lal<br />
+            lal<br />lal<br />lal<br />lal<br />lal<br />
+            lal<br />lal<br />lal<br />lal<br />lal<br />
+            lal<br />lal<br />lal<br />lal<br />
+            lal<br />lal<br />lal<br />lal<br />lal<br />
+        </div>
     </div>
 
-     <script>
-         function log(id){
-            let dom =  document.getElementById(id);
-            console.log("----------------------",dom)
+    <script>
+        function log(id) {
+            let dom = document.getElementById(id);
+            console.log("----------------------", dom)
 
-            console.log("offsetParent  ",dom['offsetParent']);//相对定位父节点，如果没有就默认body
-            console.log("offsetTop ",dom['offsetTop']);// 距离相对定位父节点的上边位移
-            console.log("offsetLeft  ",dom['offsetLeft']) // 距离相对定位父节点的左边位移
+            console.log("offsetParent  ", dom['offsetParent']);//相对定位父节点，如果没有就默认body
+            console.log("offsetTop ", dom['offsetTop']);// 距离相对定位父节点的上边位移
+            console.log("offsetLeft  ", dom['offsetLeft']) // 距离相对定位父节点的左边位移
 
             //节点的实际宽度高度(即盒子模型的大小),不包含滚动条(不管是否存在)
             //标准w3c模型：offsetWidth = boder+padding+content(width=content)
             //iE：offsetWidth = width(border+padding+content)
-            console.log("offsetWidth   ",dom['offsetWidth'])
-            console.log("offsetHeight    ",dom['offsetHeight'])
+            console.log("offsetWidth   ", dom['offsetWidth'])
+            console.log("offsetHeight    ", dom['offsetHeight'])
 
             //当前dom 滚动的位移 
-            console.log("scrollTop    ",dom['scrollTop'])
-            console.log("scrollLeft    ",dom['scrollLeft'])
+            console.log("scrollTop    ", dom['scrollTop'])
+            console.log("scrollLeft    ", dom['scrollLeft'])
 
             //如果不出现滚动(纵横)
             //scrollWidth = clientWidth(根据盒子模型决定)
@@ -65,30 +72,30 @@
 
             //如果出现滚动  scrollWidth>clientWidth
             // scrollWidth/scrollHeight 为实际内容的宽度高度
-            console.log("scrollWidth     ",dom['scrollWidth'])
-            console.log("scrollHeight     ",dom['scrollHeight'])
+            console.log("scrollWidth     ", dom['scrollWidth'])
+            console.log("scrollHeight     ", dom['scrollHeight'])
             //边框的宽度高度
-            console.log("clientTop  ",dom['clientTop'])
-            console.log("clientLeft  ",dom['clientLeft'])
+            console.log("clientTop  ", dom['clientTop'])
+            console.log("clientLeft  ", dom['clientLeft'])
 
             //可视内容的宽度高度( 根据盒子模型决定);
             //IE：clientWidth = width-border-滚动条宽度(如果存在)；100-20-17=63
             //非IE:clientWidth = width+padding-滚动条宽度(如果存在) 100+20-17=103
-            console.log("clientWidth   ",dom['clientWidth'])
-            console.log("clientHeight  ",dom['clientHeight'])
+            console.log("clientWidth   ", dom['clientWidth'])
+            console.log("clientHeight  ", dom['clientHeight'])
 
-            
+
             //真实内容的宽度
             //IE:content = width-border-padding-滚动条宽度(如果存在)
             //非IE: content =width - 滚动条宽度(如果存在)
             console.log(dom.getBoundingClientRect())
-         }
-         log("box")
-         log("box1")
+        }
+
 
          //获取滚动条的宽度(如果存在),不存在为0;
         //  offsetHeight-clientHeight-boderLeft-borderRight
-         
-     </script>
+
+    </script>
 </body>
+
 </html>
