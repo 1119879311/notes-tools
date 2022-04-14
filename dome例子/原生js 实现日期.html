@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .by-flex {
+            display: flex;
+            align-items: center;
+        }
+
+        .by-flex.by-flex-center {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .by-datetime-picter,
+        .by-datetime-input {
+            margin: 30px auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .by-dateTime {
+            width: 300px;
+            color: #606266;
+            border: 1px solid #e4e7ed;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+            background: #fff;
+            border-radius: 4px;
+            line-height: 30px;
+            margin: 5px auto;
+            display: none;
+        }
+
+        .by-dateTime-hader {
+            justify-content: space-between;
+            padding: 0 12px;
+        }
+
+        .by-dateTime-hader .left-header span,
+        .by-dateTime-hader .right-header span {
+            cursor: pointer;
+        }
+
+        .by-dateTime-hader .left-header span:hover,
+        .by-dateTime-hader .right-header span:hover {
+            color: #409eff;
+        }
+
+        .by-dateTime-weekmain {
+            border-bottom: 1px solid #e4e7ed;
+            text-align: center;
+        }
+
+        .by-dateTime-daysmain {
+            flex-wrap: wrap;
+        }
+
+        .by-dateTime-week,
+        .by-dateTime-day {
+            width: 14.28%;
+        }
+
+        .by-dateTime-day {
+            justify-content: center;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .by-dateTime-day span {
+            display: block;
+            width: 24px;
+            height: 24px;
+            font-weight: 700;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            cursor: pointer;
+        }
+
+        .available-month:hover,
+        .available-month.active {
+            color: #409eff;
+        }
+
+        .available-month.current span {
+            background: #409eff;
+            color: #fff;
+        }
+
+        .by-dateTime-day.prev-month span,
+        .by-dateTime-day.next-month span {
+            color: #c0c4cc;
+            pointer-events: none;
+            cursor: no-drop;
+        }
+
+        .by-input {
+            width: 240px;
+            outline: none;
+            color: #606266;
+            border: 1px solid #e4e7ed;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+            background: #fff;
+            border-radius: 4px;
+            line-height: 30px;
+            padding: 0px 20px 0 6px;
+
+            transition: all 0.3s;
+        }
+
+        .by-datetime-input {
+            position: relative;
+            display: inline-block;
+        }
+
+        .by-clear-ionic {
+            position: absolute;
+            display: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            line-height: 12px;
+            text-align: center;
+            border: 1px solid #a1a4aa;
+            color: #a1a4aa;
+            background-color: #fff;
+            font-size: 16px;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .by-input:focus {
+            border: 1px solid #409eff;
+        }
+
+        .by-datetime-input:hover .by-clear-ionic,
+        .by-input:focus+.by-clear-ionic {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div style="height: 1200px;"></div> -->
+    <div class="by-datetime-picter" style="position: absolute;right: 0;bottom: 0"></div>
+    <div class="by-datetime-picter2"></div>
+    <script>
+        let refIndex = 1;
+        function byDateTimePicter(option = {}) {
+            this.config = Object.assign({}, {
+                el: "",
+                value: new Date()
+            }, option)
+            console.log(this.config)
+            this.inputWarpRef = this.config.el.nodeType == 1 ? this.config.el : document.querySelector(this.config.el)
+            if (!this.inputWarpRef) {
+                throw new Error("options el is not selector in className or id")
+            }
+            this.format = "YYYY-MM-DD"
+            this.dateTimeId = "by-dateTime-" + (refIndex++);
+            this.dateTimeRef = null;
+            this.renderInit();
+
+        }
+
+
+        byDateTimePicter.prototype.renderInit = function () {
+
+            let dateTimeRef = document.createElement("div")
+            dateTimeRef.id = this.dateTimeId
+            dateTimeRef.className = "by-dateTime"
+            this.dateTimeRef = dateTimeRef
+            console.log(this.dateTimeRef)
+            this.dateTimeRef.innerHTML = this.reanderDateTimeBase();
+            document.body.appendChild(dateTimeRef)
+            this.renderInput();
+            this.reanderDateTime()
+            this.addDateEvent()
+
+        }
+        byDateTimePicter.prototype.renderInput = function () {
+            let inputval = this.config.value;
+            let inputDate = new Date(inputval)
+            if (isDate(inputDate)) {
+                inputval = dateFormat(inputDate, 'YYYY-MM-DD');
+            } else {
+                inputval = '';
+            }
+            let inputTtml = `
+            <div class="by-datetime-input" >
+                <input type="text" value="${inputval}" placeholder="请选择日期" class="by-input" id="inputdate"/>
+                <span class="by-clear-ionic">x</span>
+            </div>`
+
+            this.inputWarpRef.innerHTML = inputTtml
+            this.addInputEvent()
+
+        }
+        byDateTimePicter.prototype.reanderDateTimeBase = function () {
+            return ` <div class="by-flex by-dateTime-hader">
+                        <div class="left-header">
+                            <span  class="changebtn prevyear-btn" data-type="Y-">&lt;&lt;</span>&nbsp;&nbsp;
+                            <span  class="changebtn prevmonth-btn" data-type="M-">&lt;</span>
+                        </div>
+                        <div class="center-header" id="by-dateHeader"></div>
+                        <div class="right-header">
+                            <span class="changebtn nextmonth-btn" data-type="M+">&gt;</span> &nbsp;&nbsp;
+                            <span class="changebtn prevmonth-btn" data-type="Y+">&gt;&gt;</span>
+                        </div>
+                    </div>
+                    <div class="by-dateTime-body">
+                        <div class="by-flex by-dateTime-weekmain">
+                            <div class="by-dateTime-week">日</div>
+                            <div class="by-dateTime-week">一</div>
+                            <div class="by-dateTime-week">二</div>
+                            <div class="by-dateTime-week">三</div>
+                            <div class="by-dateTime-week">四</div>
+                            <div class="by-dateTime-week">五</div>
+                            <div class="by-dateTime-week">六</div>
+                        </div>
+                        <div class="by-flex by-dateTime-daysmain" id="by-datas"></div>
+                    </div>`
+        }
+        byDateTimePicter.prototype.reanderDateTime = function () {
+            let data = this.config.value
+            let year = data.getFullYear() //年月日
+            let month = data.getMonth() + 1 //月
+            let day = data.getDate() //日
+            let hours = data.getHours() //时
+            let minutes = data.getMinutes()//分
+            let seconds = data.getSeconds()//秒 
+            let dayWeek = data.getDay()//秒 
+
+            //这个月有多少天
+            let data1 = new Date(year, month, 0)
+            let hasDays = data1.getDate();
+            //这个月的最后一天是星期几
+            let lastDayWeek = data1.getDay()
+
+            //第一天是星期几
+            data1.setDate(1)
+            let firstDayWeek = data1.getDay()
+
+            //上个月有多少天
+            data1.setDate(0)
+            let lastMonth = data1.getMonth() + 1
+            let lastMonthHasDay = data1.getDate();
+            let lmday = lastMonthHasDay - firstDayWeek + 1
+            let daysHtmlStr = ''
+            for (let i = 0; i < firstDayWeek; i++) {
+                daysHtmlStr += '<div class="by-flex by-dateTime-day prev-month"> <span>' + (lmday++) + '</span></div>'
+            }
+            let currentDay = dateFormat(new Date(), this.format)
+            let inputRef = this.inputWarpRef.querySelector(".by-input")
+            let inputval = inputRef && inputRef.value || '';
+            if (isDate(new Date(inputval))) {
+                inputval = dateFormat(inputval, this.format);
+            }
+            for (let i = 1; i <= hasDays; i++) {
+                let dataDays = [year, month, setFill(i)].join("-")
+                let activeClass = ""
+                if (currentDay == dataDays) {
+                    activeClass = ' active '
+                } else {
+                    activeClass = ''
+                }
+                let currentClass = '';
+                if (inputval == dataDays) {
+                    currentClass = ' current '
+                } else {
+                    currentClass = ''
+                }
+                daysHtmlStr += '<div class="by-flex by-dateTime-day available-month' + activeClass + currentClass + '" data-days="' + dataDays + '" > <span>' + i + '</span></div>'
+            }
+
+            //一周0-6
+            //最后一天是5;要补一天下个月的
+            for (let i = 1; i <= 6 - lastDayWeek; i++) {
+                daysHtmlStr += '<div class="by-flex by-dateTime-day next-month"> <span>' + i + '</span></div>'
+            }
+            this.dateTimeRef.querySelector("#by-dateHeader").innerHTML = `${year}-${month}`
+            this.dateTimeRef.querySelector("#by-datas").innerHTML = daysHtmlStr
+
+        }
+        //给input 添加事件
+        byDateTimePicter.prototype.addInputEvent = function () {
+            let _this = this;
+            //获取焦点
+            onEven("click", this.inputWarpRef, ".by-input", function (ev) {
+                let e = ev || window.event
+                // let left = e.pageX - e.offsetX;
+
+                // 计算左边： 是否超出屏幕
+
+                _this.dateTimeRef.style.display = "block"
+                let clickTargetPos = e.target.getBoundingClientRect();
+                let targetWidth = _this.dateTimeRef.getBoundingClientRect().width;
+                let targetPos = _this.dateTimeRef.getBoundingClientRect();
+                // debugger
+
+                let isOutLeft = clickTargetPos.left + targetPos.width > window.innerWidth;
+                let lastLeft = isOutLeft ? window.innerWidth - targetPos.width : clickTargetPos.left;
+
+                let isBottom = clickTargetPos.bottom + targetPos.height > window.innerHeight;
+                let lastTop = isBottom ? clickTargetPos.top - targetPos.height - 12 : clickTargetPos.bottom
+
+
+                // let top = e.pageY - e.offsetY + e.target.offsetHeight;
+                _this.dateTimeRef.style.cssText = `position:fixed;left:${lastLeft}px;top:${lastTop}px;display:block`
+
+                e.stopPropagation()
+                return false
+            })
+
+            //失去焦点
+            let inputRef = this.inputWarpRef.querySelector(".by-input")
+            inputRef.addEventListener("blur", function (ev) {
+                let e = ev || window.event
+                let caceData = new Date(e.target.value)
+                if (isDate(caceData)) {
+                    //判断日期是否不变
+                    //获取当前选择的
+                    let currentRef = _this.dateTimeRef.querySelector(".available-month.current")
+                    let currentRefValue = currentRef && currentRef.dataset.days
+                    if (dateFormat(caceData, _this.format) == currentRefValue) {
+                        return false
+                    }
+                    _this.config.value = caceData;
+                    _this.reanderDateTime()
+                } else {
+                    e.target.value = '';
+                }
+            })
+            // 清空
+            onEven("click", this.inputWarpRef, ".by-clear-ionic", function (ev) {
+                let e = ev || window.event
+                let currentRef = _this.dateTimeRef.querySelector(".available-month.current")
+                currentRef && currentRef.classList.remove("current")
+                e.target.previousElementSibling.value = "";
+                e.stopPropagation()
+            })
+            //隐藏日期
+            document.addEventListener("click", function (e) {
+
+                if (!_this.dateTimeRef.contains(e.target)) {
+                    _this.dateTimeRef.style.display = "none"
+                }
+                e.stopPropagation()
+                return false
+            }, false)
+
+        }
+        //给日期添加事件
+        byDateTimePicter.prototype.addDateEvent = function () {
+            let _this = this;
+            let inputRef = this.inputWarpRef.querySelector(".by-input")
+            //选择日期
+            onEven("click", _this.dateTimeRef, ".available-month span", function (e) {
+                let currentRef = _this.dateTimeRef.querySelector(".available-month.current")
+                if (currentRef != e.target.parentElement) {
+                    currentRef && currentRef.classList.remove("current")
+                    e.target.parentElement.classList.add("current")
+                }
+                inputRef.value = e.target.parentElement.dataset.days
+                e.stopPropagation()
+
+            }, true)
+
+            onEven("click", _this.dateTimeRef, ".changebtn", function (e) {
+                console.log(e.target, e.target.dataset)
+                let data = _this.config.value
+                let year = data.getFullYear();
+                let month = data.getMonth();
+                console.log(year, 'year----')
+                console.log(month, 'month----')
+                switch (e.target.dataset.type) {
+                    case "Y+":
+                        console.log("----1")
+                        _this.config.value.setFullYear(year + 1)
+                        _this.reanderDateTime()
+                        break;
+                    case "Y-":
+                        console.log("----2")
+
+                        if (year > 1979) {
+                            _this.config.value.setFullYear(year - 1)
+                            _this.reanderDateTime()
+                        }
+                        break;
+                    case "M+":
+
+                        _this.config.value.setMonth(month + 1)
+                        _this.reanderDateTime()
+
+                        break;
+                    case "M-":
+                        _this.config.value.setMonth(month - 1)
+                        _this.reanderDateTime()
+                        break;
+                    default:
+                        break;
+                }
+                e.stopPropagation()
+
+            }, true)
+
+        }
+
+
+        function onEven(eventType, parntNode, childNode, fn, bool) {
+            console.log("parntNode", parntNode)
+            //没有委托
+            let trifn;
+            if (typeof childNode == 'function') {
+                bool = fn;
+                trifn = childNode
+            } else {
+                //有委托
+                trifn = function (e) {
+                    let target = e.target
+                    if (target.matches(childNode)) {
+                        target['mapTarget'] = this;
+                        typeof fn == "function" && fn.apply(target, arguments)
+                    }
+                }
+            }
+            if (parntNode.nodeType == 1) {
+                parntNode.addEventListener(eventType, trifn, bool || false)
+            } else {
+                document.querySelectorAll(parntNode).forEach(function (itme) {
+                    itme.addEventListener(eventType, trifn, bool || false)
+                })
+            }
+
+        }
+
+        // 判断是否是日期
+        function isDate(val) {
+            return val instanceof Date && !isNaN(val.getTime())
+        }
+        //补0
+        function setFill(val) {
+            return val > 9 ? val : '0' + val
+        }
+
+        function dateFormat(date = new Date(), patter = 'YYYY-MM-DD mm:ss') {
+
+            let nowTime = date;
+            if (!isDate(nowTime)) {// 有可能是日期格式的字符串，或者时间戳
+                nowTime = /^\d+$/.test(nowTime) ? Number(nowTime) : nowTime;
+                nowTime = new Date(nowTime);//尝试转为日期
+                //转为之后再做一次判断
+                if (!isDate(nowTime)) {
+                    return date;//如果还不是日期格式，直接返回原数据
+                }
+            }
+            let data = {
+                "Y+": nowTime.getFullYear(), //年
+                "M+": setFill(nowTime.getMonth() + 1),//月
+                "D+": setFill(nowTime.getDate()),//日
+                "h+": setFill(nowTime.getHours()),//时
+                "m+": setFill(nowTime.getMinutes()),//分
+                "s+": setFill(nowTime.getSeconds()),//秒
+                "S": nowTime.getMilliseconds(),  //毫秒  
+                "J": Math.floor((nowTime.getMonth() + 3) / 3), //季度 
+            }
+            for (const key in data) {
+                if (new RegExp("(" + key + ")").test(patter)) {
+                    patter = patter.replace(RegExp.$1, data[key])
+                }
+            }
+
+            return patter
+        }
+        new byDateTimePicter({ el: ".by-datetime-picter" })
+        new byDateTimePicter({ el: ".by-datetime-picter2" })
+
+    </script>
+</body>
+
+</html>

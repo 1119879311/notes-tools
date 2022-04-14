@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript文档对象模型</title>
+</head>
+<body>
+    <div id="parent">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <script>
+        document.getElementById("paent")
+        //  javascript 文档对象模型 document object model
+
+        // 一： Document 对象
+        // 1. 返回当前获取焦点的元素
+             document.activeElement 
+       
+        // 2. 给文档添加事件监听，eventType：事件类型，callback:事件回调，boolean：true=>事件在捕获执行，false=>事件在冒泡执行
+            document.addEventListener("eventType","callback","boolean")  
+        
+        // 3. 返回当前文档的绝对基础url
+            document.baseURI
+        
+        // 4. 返回文档body元素
+            document.body
+        
+        // 5.创建节点元素，节点类型为1;如div,span
+            document.createElement("标签")
+       
+        // 6.创建虚拟节点元素(文档碎片节点),节点类型为11,,没有具体的标签，不属于dom树
+            document.createDocumentFragment()
+
+        // 7.创建属性节点：如class, style,,要使用setAttributeNode()插入
+            document.createAttribute
+
+        //8.创建文本节点，使用appendChild() 插入
+            document.createTextNode("这是文本节点")
+        
+        // 10.返回当前文档的form表单节点集合
+            document.forms
+
+        // 11.获取文档中指定class名的元素集合，返回的是nodeList集合
+            document.getElementsByClassName("className")
+        
+        // 12.获取文档中指定id名的元素
+            document.getElementById("idName")
+        
+        // 13. 返回文档指定name 名称的元素集合
+            document.getElementsByName()
+
+        // 14.返回文档指定标签的元素集合
+            document.getElementsByTagName();
+
+        // 15.返回文档中所有的img 集合对象
+            document.images
+
+        // 16. 返回对文档中所有 Area 和 Link 对象引用
+            document.links
+
+        // 17. 删除空文本节点
+            document.normalize()
+        
+        // 18. 获取文档中匹配指定的CSS选择器的第一元素
+            document.querySelector()
+
+        // 19. 获取文档中匹配指定css 选择器的元素集合
+            document.querySelectorAll()
+        
+        // 20. 返回所有脚本集合
+            document.scripts
+        
+        // 21. 返回/设置当前文档的标题
+            documen.title
+
+        // 22. 向文档写入html 或者script 脚本
+            document.write()
+
+          //23. 返回文档根节点 html
+            document.documentElement
+            // 23.1 获取页面（html 节点）当前滚动的距离顶部高度
+            document.documentElement.scrollTop
+            // 23.1 获取页面（html 节点）当前滚动的距离左边的高度
+            document.documentElement.scrollLeft
+            //23.1 获取页面（html 节点）的可视宽度(不会因为内容多大而撑开)
+            document.documentElement.clientWidth
+            //23.1 获取页面（html 节点）的可视高度(不会因为内容多大而撑开)
+            document.documentElement.clientHeight
+
+            //23. 获取页面（html 节点）的宽度(最小值为页面可视宽度),如果页面内容大于页面可视宽度，就是内容body的clientWidth
+            document.documentElement.scrollWidth
+
+            //23. 获取页面（html 节点）的高度(最小值为页面可视高度),如果页面内容大于页面可视高度，就是内容body的clientHeight
+            document.documentElement.scrollHeight
+           
+            //23. 获取页面（html 节点）的上外边框到下外边框的距离
+            document.documentElement.offsetHeight
+            document.documentElement.offsetWidth
+
+
+
+    </script>
+</body>
+</html>

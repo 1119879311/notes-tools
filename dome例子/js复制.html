@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button type="button" onclick="copeText('sdfksfdsdfd')">sdfdsf</button>
+    <button type="button" onclick="copeText('今天好天气')">sdfdddsf</button>
+
+    <script>
+
+        function SingerInstance() {
+            let instance;
+            return function (fn, ...args) {
+                let context = this
+                if (!instance) {
+                    instance = fn.apply(context, args)
+                }
+                return instance
+            }
+
+        }
+
+        function createInput() {
+            return document.createElement("input")
+
+        }
+
+        let getInstance = SingerInstance()
+        function copeText(value, cb) {
+            let res = false
+            if (window.clipboardData) { //IE的
+                //先清空原来的
+                window.clipboardData.clearData()
+                //再赋值
+                window.clipboardData.setData("Text", value)
+                res = true
+            } else {
+                let inputDom = getInstance(createInput)
+                inputDom.value = value; //赋值
+                inputDom.style.display = 'block';
+                document.body.appendChild(inputDom)
+                inputDom.select();// 选中
+                res = document.execCommand("Copy");//执行复制命令
+                inputDom.style.display = 'none';
+                console.log(res)
+
+            }
+            typeof cd == "function" && cd(res)
+        }
+
+    </script>
+</body>
+
+</html>

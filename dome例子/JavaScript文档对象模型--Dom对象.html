@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript文档对象模型--Dom对象</title>
+</head>
+<body>
+    <div id="element"></div>
+    <script>
+        // JavaScript文档对象模型--Dom对象
+        var element = document.getElementById("element")
+
+        // 1. 给指定元素添加事件句柄
+            element.addEventListener("click",function(){},false)
+        
+        // 2. 给指定元素element 的子节点列表的末尾添加一个子节点(元素节点，文本节点....)
+            element.appendChild()
+
+        //3. 返回指定元素element 的属性数组
+            element.attributes
+
+        // 4. 返回指定元素element 的子标签节点集合(只有标签节点)
+            element.children
+        
+        // 5. 返回指定元素element 的子节点集合(标签节点，文本节点)
+            element.childNodes
+
+        // 6.克隆指定element节点,参数如果为true，则克隆包含它的子孙节点，否则只是克隆当前节点
+            element.cloneNode(true)
+
+        // 7. 返回指定元素类名，作为DOMTokenList 对象，包含这add(),remove(),contains(),toggle() 方法
+            element.classList
+
+        // 8. 返回/设置指定元素类名，字符串类型
+            element.className
+        
+        // 9. 获取element 上内边框到下内边框的距离,width+padding(不包含boder)
+            element.clientHeight
+
+        // 10. 获取element 左内边框到右内边框的距离，width+padding
+            element.clientWidth
+
+        // 11. 获取左边框(border-left-width)的宽度，没有为0
+            element.clientLeft
+        // 12. 获取上边框(border-left-width)的宽度，没有为0
+            element.clientTop
+        
+        // 13. 获取element元素外上边框到外下边框的距离(width+padding+border)
+            element.offsetHeight
+        
+        // 13. 获取element元素外左边框到外右边框的距离(height+padding+border)
+            element.offsetWidth
+        
+        // 14.获取element元素外左边框到相对offsetParent元素(即相对定位,默认为body元素)的左内边框的距离
+            element.offsetLeft
+        
+        // 15.获取element元素外上边框到相对offsetParent元素(即相对定位，默认body元素)的上内边框的距离
+            element.offsetTop
+        
+        // 16. 返回element相对偏移的元素(默认为body,如果没设置定位)
+            element.offsetParent
+        
+        // 17. 返回element 的height+padding ,如果出现滚动，实际返回的是内容宽度+padding 
+            element.scrollHeight
+        
+        // 18. 返回element 的width+padding,如果出现滚动，实际返回的是内容高度+padding
+            element.scrollWidth
+
+        
+        // 19. 获取元素element 的位置属性方法
+            element.getBoundingClientRect()
+        
+        // 20. 获取元素的绝对位置(指当前元素的左上角相对于整张网页左上角的坐标)
+          var let1 =   element.getBoundingClientRect().left
+           var top1 =  element.getBoundingClientRect().top
+
+        // 21. 获取元素的相对位置(指当前元素的左上角相对与窗口左上角的坐标)
+            element.getBoundingClientRect().top+document.documentElement.scrollTop
+            element.getBoundingClientRect().left+document.documentElement.scrollLeft
+
+        // 22. 判断元素是否在可视区域
+            function isView(ele){
+               if(ele&&ele.nodeType!==1){
+                   ele = document.querySelector(ele)
+               }
+               if(!ele)  return
+               let res = ele.getBoundingClientRect();
+               let isleft =res.left< window.innerWidth&& res.right >0
+               let isTop = res.top < window.innerHeight && res.bottom >0
+               return isTop && isleft;
+            }
+
+            //事件委托处理封装
+            function onEven(eventType,parntNode,childNode,fn,bool){
+                //没有委托
+                let trifn;
+                if(typeof childNode=='function'){
+                    bool = fn;
+                    trifn = childNode
+                }else{
+                    //有委托
+                    trifn = function(e){
+                        let  target = e.target
+                        if(target.matches(childNode)){
+                            target['mapTarget'] = this;
+                            typeof fn=="function"&&fn.apply(target,arguments)
+                        }
+                    }
+                }
+                document.querySelectorAll(parntNode).forEach(function(itme){
+                    itme.addEventListener(eventType,trifn,bool||false)
+                })
+            }
+
+            function getStyle(el,Property){
+                return el.currentStyle ? el.currentStyle[Property] : getComputedStyle(el)[Property];
+            }
+           
+    </script>
+</body>
+</html>
