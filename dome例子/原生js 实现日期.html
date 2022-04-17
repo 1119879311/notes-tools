@@ -320,6 +320,7 @@
 
                 let lastLeft = isOutLeft ? bodyW - targetPos.width : e.pageX - e.offsetX;
 
+                // document.documentElement.offsetHeight
                 let bodyH = document.body.scrollHeight >= window.innerHeight ? document.body.scrollHeight : window.innerHeight;;
                 // let isBottom = clickTargetPos.bottom + targetPos.height > window.innerHeight;
                 let isBottom = e.pageY + targetPos.height - e.offsetY > bodyH
