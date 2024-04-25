@@ -1,0 +1,31 @@
+找到根目录下所有的后缀名为test的文件并把查找结果当做参数传给rm -rf命令进行删除：
+find  -maxdepth 1  -name "*.back.*"|xargs rm -rf
+1、find . -name '*.test' | xargs rm -rf
+2、find . -name '*.test' -exec rm -rf {} \;
+3、rm -rf $(find . -name '*.test')
+
+如果想指定递归深度，可以这样：
+1、find . -maxdepth 3 -name '*.test' | xargs rm -rf
+2、find . -maxdepth 3 -name '*.test' -exec rm -rf {} \;
+3、rm -rf $(find . -maxdepth 3 -name '*.test')
+这样只会查找三层目录中符合条件的文件并删除掉！
+
+其他查找条件：
+1. 批量删除空文件（大小等于0的文件）
+find . -name "*" -type f -size 0c | xargs -n 1 rm -f
+
+2. 删除指定size大小文件
+find . -name "*" -type f -size 1024c | xargs -n 1 rm -f
+ps:  此处即删除1k大小的文件. (但注意不要用 -size 1k，这个得到的是占用空间1k，不是文件大小1k的)
+
+3. 查询出所有的空文件夹
+find -type d -empty
+
+4. 列出搜索到的文件
+find . -name "*.test" -exec ls -l {} \;
+
+5. 批量删除搜索到的文件
+find . -name "*.test" -exec rm -f {} \;
+
+6. 删除前有提示
+find . -name "*.test" -ok rm -rf {} \;

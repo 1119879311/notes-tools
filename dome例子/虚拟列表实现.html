@@ -51,7 +51,7 @@
     let allData = Array.from({length:1000},(_,v)=>v)
     scrollPhantom.style.height = (allData.length * 60 ) +'px'
 
-    function debounces(fn,delay=500){
+    function debounces(fn,delay=16.6){
         let timer = null;
 
         return function(){
@@ -84,27 +84,33 @@
         // })
         
         contains.addEventListener("scroll",debounces(function(e){
-            // console.log(this)
-            updateViews(this)
-        },10))
+            console.log(this,e)
+            updateViews(e)
+        },0))
       
-        updateViews(contains)
+        updateViews({target:contains})
         function updateViews(ev){
           
             requestAnimationFrame(()=>{
-                let scrollTop = ev.scrollTop ||0;
+                console.log("ev",ev,ev.target)
+                const target = ev.target;
+                let scrollTop = target.scrollTop ||0;
                 // 计算当前可以显示的个数
-                let viewsCount = Math.ceil(ev.clientHeight /itmeHeight)   ; 
+                let viewsCount = Math.ceil(target.clientHeight /itmeHeight)   ; 
                 
                 // 计算当前可视区域显示的起始 数据的搜索(相对总数的索引)
-                let startIndex = Math.floor(scrollTop/itmeHeight)
+                let startIndex = Math.floor(scrollTop/itmeHeight);
+                const renderStartIndex = startIndex-2>0? startIndex-2:0
 
                 //计算当前可视区域显示的结束索引endIndex(相对总数的索引)
-                let endIndex = startIndex + viewsCount
+                let endIndex = startIndex + viewsCount +2;
+                let allLen = allData.length;
+                let renderEndIndex = endIndex >allLen?allLen:endIndex;
+
 
                 console.log(scrollTop,viewsCount,startIndex,endIndex)
-                let renderData = allData.slice(startIndex,endIndex)
-                console.log(renderData)
+                let renderData = allData.slice(renderStartIndex,renderEndIndex)
+                console.log("renderData---------",ev.clientHeight,viewsCount,renderData,startIndex,renderStartIndex,renderEndIndex)
                 render(renderData)
                 console.log(scrollTop,startIndex * itmeHeight,startIndex)
                 scrollViews.style.transform = `translate3d(0, ${scrollTop}px, 0px)`

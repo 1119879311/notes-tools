@@ -1,0 +1,22 @@
+分支 git branch 
+
+无参： 列出本地分支
+-r  ：列出远程分支
+-a  : 列全部分支(本地和远程的)
+-d :删除本地分支   git branch -a dev
+-m : 分支重命名  
+	git branch -m | -M dev newDev （强制）
+	git branch -m  dev newdev   
+
+删除远程分支
+git branch -d -r  dev
+git push  --detele origin dev
+
+
+查看分支：git branch
+创建分支：git branch <name>
+切换分支：git checkout <name>
+创建+切换分支：git checkout -b <name>
+合并某分支到当前分支：git merge <name>
+删除分支：git branch -d <name>
+强制推送： git push -u origin master -f

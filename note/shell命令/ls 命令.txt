@@ -1,0 +1,20 @@
+ls 
+
+ls -lht --time-style=long-iso
+
+ls -lht可以查看文件大小以M来显示
+
+--time-style=long-iso 显示年月日时分
+
+ls -l --time-style=full-iso 显示精确到毫秒
+
+ls -l --time-style=iso   ls -l --time-style=locale  显示月日时分
+
+ls -l --time-style '+%Y/%m/%d %H:%M:%S' 自定义显示方式
+
+
+
+
+
+
+

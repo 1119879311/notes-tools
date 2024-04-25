@@ -1,0 +1,8 @@
+//查询更新
+update tK_classify as c1,(select id from tk_classify where pid=2) as c2 set c1.pid=0 where c1.id in (c2.id)
+
+
+
+// 同表左查询
+select c1.*,c2.id,c2.name from tk_classify c1 left join tk_classify c2 on c1.pid = c2.id;
+
